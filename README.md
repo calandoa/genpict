@@ -26,9 +26,9 @@ On Ubuntu 16.04:
 
         genpict.zsh [options] [input folders]
 
-		    -t title 	: title
-    		-s subtitle	: subtitle
-    		-m theme	: theme (white, grey, black)
-    		-o out		: output folder (def: html)
-    		-d 		    : debug (quick pass without copy and convertion)
-    		-f		    : remove existing output folder if any
+            -t title    : title
+            -s subtitle : subtitle
+            -m theme    : theme (white, grey, black)
+            -o out      : output folder (def: html)
+            -d          : debug (quick pass without copy and convertion)
+            -f          : remove existing output folder if any
