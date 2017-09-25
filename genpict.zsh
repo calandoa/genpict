@@ -14,8 +14,8 @@
 # Genpict const
 
 # W/H of images and videos
-WIDTH_MAX=1536.00
-HEIGHT_MAX=1024.00
+WIDTH_MAX=1536
+HEIGHT_MAX=1024
 
 # Extensions recognized
 IMG_EXT=(jpg jpeg png gif)
@@ -36,6 +36,8 @@ JOBS_MAX=$(nproc)
 
 TOP_FORMAT=(40px 25px)
 LEFT_FORMAT=(70px 50px 60% auto)
+TEXT_FONT="bold 50px/100px Arial"
+TEXT_BG="rgba(0,0,0,.7)"
 
 
 # #################################################################################################################
@@ -202,22 +204,26 @@ EOF
 # Fill CSS depending on title type
 if [[ $side == top ]]; then
 	cat <<- EOF >> $outdir/index.html
+	 	.title { text-align: center; }
 	 	.span1 { font-size: $format[1]; }
 	 	.span2 { font-size: $format[2]; }
-	 	.title { text-align: center; }
 	EOF
 
 elif [[ $side == left || $side == right ]]; then
+	[[ $side == right && $format[4] == auto ]] && format[4]="0px"
+
+
 	cat <<- EOF >> $outdir/index.html
-	 	span { background: rgba(0,0,0,.7);
-	 		font: bold 50px/100px Arial;
-	 		padding:10px; }
-	 	.span1 { font-size: $format[1]; }
-	 	.span2 { font-size: $format[2]; }
+		div { position: relative; }
 	 	.title { text-align: $side;
 	 		position: absolute;
 	 		top: $format[3];
 	 		$side: $format[4]; }
+		span { background: $TEXT_BG;
+	 		font: $TEXT_FONT;
+	 		padding:10px; }
+	 	.span1 { font-size: $format[1]; }
+	 	.span2 { font-size: $format[2]; }
 	EOF
 elif [[ $side == none ]]; then
 	cat <<- EOF >> $outdir/index.html
@@ -261,8 +267,8 @@ for f in $media ; do
 		# 6 Right-Top		5 Left-Top
 		# 8 Left-Bottom		7 Right-Bottom
 		(( orient == 6 || orient == 8 )) && size=( $size[2] $size[1] )
-		(( ratio_w = $size[1] / $WIDTH_MAX ))
-		(( ratio_h = $size[2] / $HEIGHT_MAX ))
+		(( ratio_w = $size[1].0 / $WIDTH_MAX ))
+		(( ratio_h = $size[2].0 / $HEIGHT_MAX ))
 		(( ratio = ratio_w > ratio_h? ratio_w : ratio_h))
 		(( ratio = ratio > 1 ? ratio : 1 ))
 		# The "| 0" allows to truncate the float to an int
@@ -312,8 +318,8 @@ for f in $media ; do
 		eval $hw_raw
 
 		[[ $rotate == -90 || $rotate == 90 || $rotate == 270 ]] && { tmp=$width ; width=$height ; height=$tmp }
-		(( ratio_w = $width / $WIDTH_MAX ))
-		(( ratio_h = $height / $HEIGHT_MAX ))
+		(( ratio_w = $width.0 / $WIDTH_MAX ))
+		(( ratio_h = $height.0 / $HEIGHT_MAX ))
 		(( ratio = ratio_w > ratio_h? ratio_w : ratio_h))
 		(( ratio = ratio > 1 ? ratio : 1 ))
 		# Make sure w&h are multiples of 2, and round them to int
