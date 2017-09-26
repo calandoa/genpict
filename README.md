@@ -3,7 +3,7 @@ Simple static pictures gallery generator.
 
 This script processes collection of images and generates HTML pages to display these images in one column.
 
-It was inspired by (https://github.com/Jack000/Expose).
+It was inspired by https://github.com/Jack000/Expose.
 
 # Features
  - very simple
@@ -34,7 +34,7 @@ On Ubuntu 16.04:
             -f "format" : title format ("size_t size_T pos_Y pos_X")
             -c color    : color (white, grey, black)
             -o out      : output folder (default: html)
-            -d          : debug (quick pass without copy and convertion)
+            -d          : debug (quick pass without copy or conversion)
             -r          : remove existing output folder if any
 
 
