@@ -76,7 +76,7 @@ zparseopts -D -K t:=title T:=subtitle s:=side f:=format o:=outdir c:=color 1:=fi
 
 # Default arguments
 title=${title[2]-"My Photos"}
-subtitle=${subtitle[2]-"My not so short subtitle"}
+subtitle=${subtitle[2]-}
 outdir=${outdir[2]-html}
 color=${color[2]-grey}
 side=${side[2]-left}
@@ -211,17 +211,18 @@ for f in $media ; do
 			[[ $f:e:l == jpe#g ]] && jpgqual=(-quality $JPEG_QUALITY) || jpgqual=""
 
 			# create smaller picture and optimize it
-			dest_sm="${$f:t:r}_sm.jpg"
+			dest=$f:t:r
+			dest_sm="${dest}_sm.jpg"
 			para "convert -auto-orient \"$f\" $jpgqual -resize ${width_n}x${height_n} \"$outdir/${dest_sm}.tmp\" ;\
 				jpegtran -copy none -optimize -progressive -outfile \"$outdir/$dest_sm\" \"$outdir/${dest_sm}.tmp\" "
 
 			# Same for index
-			dest_i="${$f:t:r}_i.jpg"
+			dest_i="${dest}_i.jpg"
 			[[ -n $index ]] && para "convert -auto-orient \"$f\" $jpgqual -resize ${width_i}x${height_i} \"$outdir/${dest_i}.tmp\" ;\
 				jpegtran -copy none -optimize -progressive -outfile \"$outdir/$dest_i\" \"$outdir/${dest_i}.tmp\" "
 
 			# add an optimized copy of the original image
-			para "jpegtran -copy all -optimize -progressive -outfile \"$outdir/$dest\" \"$f\" "
+			para "jpegtran -copy all -optimize -progressive -outfile \"$outdir/$dest.jpg\" \"$f\" "
 		fi
 
 	elif (( $+VID_EXT[(r)$ext] )); then
@@ -355,7 +356,7 @@ elif [[ $side == none ]]; then
 fi
 
 # Line break and span only if subtitle exists
-[[ -n $subtitle ]] && span_subtitle="<br><span class=\"span2\">&thinsp;$subtitle</span><br>"
+[[ -n $subtitle ]] && span_subtitle="<br><span class=\"span2\">&thinsp;$subtitle&thinsp;</span><br>"
 
 # Close style/head and output title and subtitle
 cat << EOF >> $outdir/index.html
@@ -364,7 +365,7 @@ cat << EOF >> $outdir/index.html
 <body>
 	<div>
 		<p class="title">
-			<span class="span1">&thinsp;$title</span>
+			<span class="span1">&thinsp;$title&thinsp;</span>
 			$span_subtitle
 		</p>
 EOF
